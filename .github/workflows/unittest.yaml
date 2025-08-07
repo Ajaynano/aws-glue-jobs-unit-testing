@@ -36,11 +36,18 @@ jobs:
           awk '/\[default\]/{flag=1;print;next}/^\[/{flag=0}flag' ~/.aws/credentials
 
       - name: Run unit tests in AWS Glue Docker container
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_PROFILE: default
         run: |
           docker run -i --rm \
             -v $HOME/.aws:/home/hadoop/.aws \
             -v $GITHUB_WORKSPACE:/home/hadoop/workspace/ \
             --workdir /home/hadoop/workspace \
+            -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+            -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+            -e AWS_PROFILE=$AWS_PROFILE \
             --name glue5_pytest \
             public.ecr.aws/glue/aws-glue-libs:glue_libs_4.0.0_image_01 \
             -c "pip install -r tests/requirements-test.txt && pip install -r src/requirements.txt && python3 -m pytest tests/  --disable-warnings"
