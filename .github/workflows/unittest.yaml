@@ -22,11 +22,13 @@ jobs:
           python-version: '3.9'
 
       - name: Set up AWS credentials for GitHub Actions
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+        shell: bash
+        run: |
+          echo "Setting up AWS credentials"
+          mkdir -p $HOME/.aws
+          echo "[default]" > $HOME/.aws/credentials
+          echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $HOME/.aws/credentials
+          echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $HOME/.aws/credentials
 
       - name: Run unit tests in AWS Glue Docker container
         run: |
