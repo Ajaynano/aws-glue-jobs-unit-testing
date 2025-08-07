@@ -21,10 +21,16 @@ jobs:
         with:
           python-version: '3.9'
 
+      - name: Set up AWS credentials for GitHub Actions
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
       - name: Run unit tests in AWS Glue Docker container
         run: |
-          export AWS_PROFILE="${{ secrets.AWS_PROFILE }}"
+          export AWS_PROFILE="default"
           if [ -z "$AWS_PROFILE" ]; then AWS_PROFILE=default; fi
           docker run -i --rm \
             -v $HOME/.aws:/home/hadoop/.aws \
