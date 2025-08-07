@@ -38,7 +38,6 @@ jobs:
             -v $HOME/.aws:/home/hadoop/.aws \
             -v $GITHUB_WORKSPACE:/home/hadoop/workspace/ \
             --workdir /home/hadoop/workspace \
-            -e AWS_PROFILE=$AWS_PROFILE \
             --name glue5_pytest \
             public.ecr.aws/glue/aws-glue-libs:glue_libs_4.0.0_image_01 \
             -c "pip install -r tests/requirements-test.txt && pip install -r src/requirements.txt && python3 -m pytest tests/  --disable-warnings"
